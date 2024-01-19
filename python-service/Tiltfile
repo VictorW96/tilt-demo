@@ -1,0 +1,12 @@
+service_label = 'python-service'
+
+docker_build(
+    service_label,
+    '.',
+    live_update=[
+        sync('./main.py', '/app/main.py'),
+    ]
+)
+
+k8s_yaml(kustomize('./kubernetes'))
+k8s_resource(service_label, port_forwards=8000, labels=service_label)

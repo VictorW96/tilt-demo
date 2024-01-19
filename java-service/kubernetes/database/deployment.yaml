@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-service-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: java-service-db
+  template:
+    metadata:
+      labels:
+        name: java-service-db
+    spec:
+      containers:
+        - name: java-service-db
+          image: postgres:13-alpine
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: POSTGRES_DB
+              value: java-service-db
+            - name: POSTGRES_USER
+              value: test_user
+            - name: POSTGRES_PASSWORD
+              value: test
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: database-persistent-storage
+      volumes:
+        - name: database-persistent-storage
+          persistentVolumeClaim:
+            claimName: database-claim

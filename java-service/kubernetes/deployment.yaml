@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: java-service
+  name: java-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-service
+  strategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        service: java-service
+        app: java-service
+    spec:
+      containers:
+        - name: java-service
+          image: java-service
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: java-service-config
+          startupProbe:
+            httpGet:
+              path: /q/health/started
+              port: 8080
+            periodSeconds: 1
+            failureThreshold: 300
+          readinessProbe:
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+            periodSeconds: 2
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /q/health/live
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: https
+              containerPort: 8081
+          resources:
+            limits:
+              memory: 5120Mi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+      restartPolicy: Always

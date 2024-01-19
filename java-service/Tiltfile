@@ -1,0 +1,17 @@
+service_label='java-service'
+
+local_resource(
+    name='gradle-build',
+    cmd='./gradlew build -x test',
+    cmd_bat='.\\gradlew build',
+    deps=['src', 'build.gradle'],
+    labels=service_label
+)
+
+docker_build(service_label, '.', dockerfile='src/main/docker/Dockerfile.jvm')
+
+k8s_yaml(kustomize('./kubernetes'))
+
+k8s_resource(workload='java-service', port_forwards='8080:8080',labels=[service_label], resource_deps=['gradle-build'])
+
+k8s_resource(workload='java-service-db', port_forwards='5432:5432',labels=[service_label])

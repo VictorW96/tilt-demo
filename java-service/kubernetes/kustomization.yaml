@@ -1,0 +1,10 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - database
+
+configMapGenerator:
+  - name: java-service-config
+    behavior: create
+    literals:
+      - QUARKUS_DATASOURCE_JDBC_URL="jdbc:postgresql://java-service-db:5432/java-service-db"
