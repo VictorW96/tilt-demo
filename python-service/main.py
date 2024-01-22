@@ -22,4 +22,4 @@ async def root():
 
 @app.get("/hello")
 async def say_hello():
-    return Response(content="Hello from Pyt", media_type="application/xml")
+    return Response(content="Hello from Python", media_type="application/xml")
