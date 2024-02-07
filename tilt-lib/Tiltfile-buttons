@@ -1,0 +1,30 @@
+load('ext://uibutton', 'cmd_button')
+load('ext://color', 'color')
+
+def git_branch():
+    return str(local('git symbolic-ref --short HEAD || true', quiet=True)).strip()
+
+def checkout_main(shell_cmd, shell_opt, path, resource):
+    if git_branch() == 'main':
+        cmd_button(name=resource+'-checkout-main',
+                   resource=resource,
+                   argv=[shell_cmd, shell_opt, 'cd ' + path + ' && git checkout main'],
+                   text='Main - OK',
+                   icon_name='check_circle',
+                   disabled=True)
+    else:
+        cmd_button(name=resource+'-checkout-main',
+                   resource=resource,
+                   argv=[shell_cmd, shell_opt, 'cd ' + path + ' && git checkout main'],
+                   text='Checkout Main',
+                   icon_name='sync',
+                   requires_confirmation=True)
+        print(color.yellow('WARNING: You are not on the main branch for '+resource))
+
+def pull_latest(shell_cmd, shell_opt, path, resource):
+    cmd_button(name=resource+'-pull-latest',
+               resource=resource,
+               argv=[shell_cmd, shell_opt, 'cd ' + path + ' && git pull'],
+               text='Pull Latest',
+               icon_name='cloud_download',
+               requires_confirmation=False)

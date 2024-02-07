@@ -5,4 +5,3 @@ This Project visualizes the usage of [TILT](https://tilt.dev/), which can be use
 ## Architecture
 
 ![Architecture](./images/tilt-demo.png)
-

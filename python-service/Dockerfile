@@ -6,7 +6,7 @@ USER root
 
 COPY . .
 
-RUN pip install --no-cache-dir fastapi uvicorn httpx
+RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
