@@ -1,5 +1,7 @@
 service_label = 'python-service'
 
+load_dynamic("../go-service/Tiltfile")
+
 docker_build(
     service_label,
     '.',
